@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شرح محاضرة 7: القوائم المترابطة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #1a2a6c, #2a4d69, #4b86b4);
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+            border-bottom: 5px solid #3498db;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-top: 15px;
+        }
+        
+        .info-box {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 12px 20px;
+            min-width: 220px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .content {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #2c3e50;
+            color: white;
+            padding: 25px 0;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        
+        .sidebar h2 {
+            padding: 15px 25px;
+            background: #1a2530;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar h2 i {
+            margin-left: 10px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            padding: 12px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .sidebar li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .sidebar li:hover {
+            background: #3498db;
+            padding-right: 30px;
+        }
+        
+        .sidebar li.active {
+            background: #2980b9;
+            border-left: 5px solid #e74c3c;
+            font-weight: bold;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: calc(100vh - 150px);
+        }
+        
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #3498db;
+            transition: transform 0.3s ease;
+            scroll-margin-top: 20px;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h2 i {
+            margin-left: 12px;
+            color: #e74c3c;
+        }
+        
+        .section h3 {
+            color: #2980b9;
+            font-size: 1.5rem;
+            margin: 25px 0 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h3 i {
+            margin-left: 10px;
+        }
+        
+        .section p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            border: 1px solid #eee;
+            text-align: center;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .comparison-table tr:hover {
+            background: #e3f2fd;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .code-comment {
+            color: #7fdbca;
+        }
+        
+        .visualization {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .list-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .node {
+            display: flex;
+            background: #3498db;
+            color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .data-part {
+            padding: 15px 20px;
+            background: #2980b9;
+            font-weight: bold;
+            min-width: 60px;
+        }
+        
+        .pointer-part {
+            padding: 15px 20px;
+            background: #2c3e50;
+            min-width: 60px;
+        }
+        
+        .arrow {
+            font-size: 2rem;
+            color: #e74c3c;
+            display: flex;
+            align-items: center;
+        }
+        
+        .memory-diagram {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .memory-segment {
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 15px;
+            min-width: 200px;
+            text-align: center;
+            background: #e3f2fd;
+        }
+        
+        .memory-segment h4 {
+            background: #3498db;
+            color: white;
+            padding: 10px;
+            margin: -15px -15px 15px -15px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            background: #2c3e50;
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .highlight {
+            background: #ffeaa7;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .note {
+            background: #d5f5e3;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #3498db;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-project-diagram"></i> شرح محاضرة 7: القوائم المترابطة (Linked Lists)</h1>
+            <div class="header-info">
+                <div class="info-box">
+                    <i class="fas fa-user-graduate"></i> الدكتور: ناديا خرسان
+                </div>
+                <div class="info-box">
+                    <i class="fas fa-book"></i> الخوارزميات وبُنى المعطيات 1
+                </div>
+                <div class="info-box">
+                    <i class="fas fa-university"></i> جامعة البعث - كلية الهندسة المعلوماتية
+                </div>
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="sidebar">
+                <h2><i class="fas fa-list"></i> محتويات المحاضرة</h2>
+                <ul>
+                    <li class="active"><a href="#intro">مقدمة عن بنى المعطيات</a></li>
+                    <li><a href="#dynamic-memory">التخصيص الديناميكي للذاكرة</a></li>
+                    <li><a href="#comparison">مقارنة المصفوفات والقوائم</a></li>
+                    <li><a href="#representation">تمثيل القوائم المترابطة</a></li>
+                    <li><a href="#basic-operations">العمليات الأساسية</a></li>
+                    <li><a href="#print">طباعة القائمة</a></li>
+                    <li><a href="#search">البحث في القائمة</a></li>
+                    <li><a href="#insertion">إدراج العناصر</a></li>
+                    <li><a href="#deletion">حذف العناصر</a></li>
+                    <li><a href="#circular">القوائم الدائرية</a></li>
+                    <li><a href="#doubly">القوائم المضاعفة</a></li>
+                    <li><a href="#final-comparison">مقارنة القوائم والمصفوفات</a></li>
+                </ul>
+            </div>
+            
+            <div class="main-content">
+                <!-- مقدمة عن بنى المعطيات -->
+                <div class="section" id="intro">
+                    <h2><i class="fas fa-database"></i> مقدمة عن بنى المعطيات</h2>
+                    
+                    <p>بنية المعطيات (Data Structure) هي طريقة لـ<span class="highlight">تنظيم وتخزين البيانات</span> في الذاكرة بحيث يمكن الوصول إليها وتعديلها بكفاءة.</p>
+                    
+                    <div class="note">
+                        <i class="fas fa-lightbulb"></i> <strong>ملاحظة هامة:</strong> اختيار بنية المعطيات المناسبة يعتمد على طبيعة المشكلة ونوع العمليات التي سنحتاج لتنفيذها.
+                    </div>
+                    
+                    <h3><i class="fas fa-sitemap"></i> تصنيف بنى المعطيات الأساسية</h3>
+                    
+                    <table class="comparison-table">
+                        <tr>
+                            <th>الأنواع البدائية (Primitive)</th>
+                            <th>الأنواع غير البدائية (Non-Primitive)</th>
+                        </tr>
+                        <tr>
+                            <td>Integer (عدد صحيح)</td>
+                            <td>مصفوفة (Array)</td>
+                        </tr>
+                        <tr>
+                            <td>Float (عدد عشري)</td>
+                            <td>قائمة (List)</td>
+                        </tr>
+                        <tr>
+                            <td>Character (حرف)</td>
+                            <td>مكدس (Stack)</td>
+                        </tr>
+                        <tr>
+                            <td>Pointer (مؤشر)</td>
+                            <td>طابور (Queue)</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>شجرة (Tree)</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>رسم بياني (Graph)</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <!-- التخصيص الديناميكي للذاكرة -->
+                <div class="section" id="dynamic-memory">
+                    <h2><i class="fas fa-memory"></i> التخصيص الديناميكي للذاكرة</h2>
+                    
+                    <p>الذاكرة في الحاسوب تنقسم إلى عدة أجزاء رئيسية:</p>
+                    
+                    <div class="memory-diagram">
+                        <div class="memory-segment">
+                            <h4>Segment التعليمات (Code)</h4>
+                            <p>يحتوي على كود البرنامج</p>
+                        </div>
+                        <div class="memory-segment">
+                            <h4>Segment البيانات (Data)</h4>
+                            <p>المتغيرات العامة والثوابت</p>
+                        </div>
+                        <div class="memory-segment">
+                            <h4>المكدس (Stack)</h4>
+                            <p>المتغيرات المحلية ومتغيرات الدوال</p>
+                        </div>
+                        <div class="memory-segment">
+                            <h4>الكومة (Heap)</h4>
+                            <p>التخصيص الديناميكي للذاكرة</p>
+                        </div>
+                    </div>
+                    
+                    <h3><i class="fas fa-code"></i> أوامر التخصيص والتحرير</h3>
+                    
+                    <div class="code-block">
+                        <span class="code-comment">// التخصيص الديناميكي في C++</span><br>
+                        int *p = new int; <span class="code-comment">// إنشاء متغير جديد</span><br>
+                        *p = 10; <span class="code-comment">// تعيين قيمة</span><br>
+                        delete p; <span class="code-comment">// تحرير الذاكرة</span><br><br>
+                        
+                        <span class="code-comment">// التخصيص الديناميكي في C</span><br>
+                        int *p = (int*)malloc(sizeof(int)); <span class="code-comment">// إنشاء متغير جديد</span><br>
+                        *p = 10; <span class="code-comment">// تعيين قيمة</span><br>
+                        free(p); <span class="code-comment">// تحرير الذاكرة</span>
+                    </div>
+                    
+                    <h3><i class="fas fa-exclamation-triangle"></i> أهمية تحرير الذاكرة</h3>
+                    <p>عند استخدام التخصيص الديناميكي، يجب دائمًا تحرير الذاكرة بعد الانتهاء من استخدامها لتجنب تسرب الذاكرة (Memory Leaks).</p>
+                </div>
+                
+                <!-- مقارنة المصفوفات والقوائم -->
+                <div class="section" id="comparison">
+                    <h2><i class="fas fa-balance-scale"></i> مقارنة المصفوفات والقوائم المترابطة</h2>
+                    
+                    <table class="comparison-table">
+                        <tr>
+                            <th>المعيار</th>
+                            <th>المصفوفة (Array)</th>
+                            <th>القائمة المترابطة (Linked List)</th>
+                        </tr>
+                        <tr>
+                            <td>وقت الوصول</td>
+                            <td>O(1) - وصول عشوائي مباشر</td>
+                            <td>O(n) - وصول تسلسلي</td>
+                        </tr>
+                        <tr>
+                            <td>الحجم</td>
+                            <td>ثابت (يحدد عند التصميم)</td>
+                            <td>ديناميكي (يتغير أثناء التنفيذ)</td>
+                        </tr>
+                        <tr>
+                            <td>الإدراج والحذف</td>
+                            <td>غير فعال (يتطلب إزاحة العناصر)</td>
+                            <td>فعال (لا يتطلب إزاحة العناصر)</td>
+                        </tr>
+                        <tr>
+                            <td>تخزين الذاكرة</td>
+                            <td>متجاور (Contiguous)</td>
+                            <td>غير متجاور (Non-Contiguous)</td>
+                        </tr>
+                        <tr>
+                            <td>هدر المساحة</td>
+                            <td>ممكن (إذا لم تستخدم المساحة بالكامل)</td>
+                            <td>لا يوجد</td>
+                        </tr>
+                        <tr>
+                            <td>الاستخدام الأمثل</td>
+                            <td>عندما يكون الحجم معروفًا مسبقًا</td>
+                            <td>عندما يكون الحجم متغيرًا وغير معروف</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <!-- تمثيل القوائم المترابطة -->
+                <div class="section" id="representation">
+                    <h2><i class="fas fa-code-branch"></i> تمثيل القوائم المترابطة</h2>
+                    
+                    <p>تتكون القائمة المترابطة من عقد (Nodes) مرتبطة ببعضها بواسطة مؤشرات.</p>
+                    
+                    <h3><i class="fas fa-cube"></i> هيكل العقدة (Node Structure)</h3>
+                    
+                    <div class="code-block">
+                        <span class="code-comment">// هيكل العقدة في القائمة المترابطة</span><br>
+                        struct Node {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int data; <span class="code-comment">// القيمة المخزنة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Node* next; <span class="code-comment">// مؤشر للعقدة التالية</span><br>
+                        };
+                    </div>
+                    
+                    <h3><i class="fas fa-project-diagram"></i> تمثيل القائمة المترابطة</h3>
+                    
+                    <div class="visualization">
+                        <div class="list-diagram">
+                            <div class="node">
+                                <div class="data-part">1</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">2</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">3</div>
+                                <div class="pointer-part">NULL</div>
+                            </div>
+                        </div>
+                        
+                        <p><strong>Head</strong>: مؤشر إلى أول عقدة في القائمة</p>
+                        <p><strong>Tail</strong>: مؤشر إلى آخر عقدة في القائمة (اختياري)</p>
+                    </div>
+                </div>
+                
+                <!-- العمليات الأساسية -->
+                <div class="section" id="basic-operations">
+                    <h2><i class="fas fa-tasks"></i> العمليات الأساسية على القوائم المترابطة</h2>
+                    
+                    <h3><i class="fas fa-print"></i> 1. طباعة القائمة (Print)</h3>
+                    
+                    <div class="code-block">
+                        void SLinkedList::printList() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Node *curr = head; <span class="code-comment">// بدء من أول عقدة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (curr != NULL) { <span class="code-comment">// حتى نهاية القائمة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; curr-&gt;data &lt;&lt; " "; <span class="code-comment">// طباعة البيانات</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curr = curr-&gt;next; <span class="code-comment">// الانتقال للعقدة التالية</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "\nLength=" &lt;&lt; length; <span class="code-comment">// طباعة طول القائمة</span><br>
+                        }
+                    </div>
+                    
+                    <h3><i class="fas fa-search"></i> 2. البحث في القائمة (Search)</h3>
+                    
+                    <div class="code-block">
+                        <span class="code-comment">// البحث عن عقدة بحسب القيمة</span><br>
+                        Node* SLinkedList::findNode(int x) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Node *curr = head; <span class="code-comment">// بدء من أول عقدة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (curr != NULL) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (curr-&gt;data == x) <span class="code-comment">// إذا وجدت القيمة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return curr; <span class="code-comment">// إرجاع العقدة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curr = curr-&gt;next; <span class="code-comment">// الانتقال للعقدة التالية</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return NULL; <span class="code-comment">// القيمة غير موجودة</span><br>
+                        }
+                    </div>
+                </div>
+                
+                <!-- طباعة القائمة -->
+                <div class="section" id="print">
+                    <h2><i class="fas fa-print"></i> طباعة القائمة المترابطة</h2>
+                    
+                    <p>عملية طباعة القائمة المترابطة تتطلب اجتياز جميع العقد من البداية إلى النهاية.</p>
+                    
+                    <h3><i class="fas fa-code"></i> كود الطباعة الكامل</h3>
+                    
+                    <div class="code-block">
+                        void SLinkedList::printList() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (head == NULL) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "القائمة فارغة!" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Node *curr = head;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "عناصر القائمة: ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (curr != NULL) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; curr-&gt;data &lt;&lt; " → ";<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curr = curr-&gt;next;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "NULL" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "طول القائمة: " &lt;&lt; length &lt;&lt; endl;<br>
+                        }
+                    </div>
+                    
+                    <h3><i class="fas fa-sitemap"></i> تمثيل مرئي لعملية الطباعة</h3>
+                    
+                    <div class="visualization">
+                        <div class="list-diagram">
+                            <div class="node">
+                                <div class="data-part">1</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">2</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">3</div>
+                                <div class="pointer-part">NULL</div>
+                            </div>
+                        </div>
+                        
+                        <p>المخرجات: 1 → 2 → 3 → NULL</p>
+                    </div>
+                </div>
+                
+                <!-- البحث في القائمة -->
+                <div class="section" id="search">
+                    <h2><i class="fas fa-search"></i> البحث في القائمة المترابطة</h2>
+                    
+                    <p>عملية البحث تتطلب اجتياز القائمة حتى العثور على القيمة المطلوبة أو الوصول لنهاية القائمة.</p>
+                    
+                    <h3><i class="fas fa-code"></i> كود البحث الكامل</h3>
+                    
+                    <div class="code-block">
+                        Node* SLinkedList::search(int value) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Node *curr = head;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int position = 1;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;while (curr != NULL) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (curr->data == value) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "تم العثور على القيمة " &lt;&lt; value <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;&lt; " في الموضع " &lt;&lt; position &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return curr;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curr = curr->next;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;position++;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; "القيمة " &lt;&lt; value &lt;&lt; " غير موجودة في القائمة" &lt;&lt; endl;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return NULL;<br>
+                        }
+                    </div>
+                </div>
+                
+                <!-- إدراج العناصر -->
+                <div class="section" id="insertion">
+                    <h2><i class="fas fa-plus-circle"></i> إدراج العناصر في القائمة المترابطة</h2>
+                    
+                    <p>حالات الإدراج المحتملة:</p>
+                    <ol>
+                        <li>الإدراج في قائمة فارغة</li>
+                        <li>الإدراج في بداية القائمة</li>
+                        <li>الإدراج في منتصف القائمة</li>
+                        <li>الإدراج في نهاية القائمة</li>
+                    </ol>
+                    
+                    <h3><i class="fas fa-code"></i> كود الإدراج الكامل</h3>
+                    
+                    <div class="code-block">
+                        void SLinkedList::insertNode(int x) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Node *newNode = new Node(); <span class="code-comment">// إنشاء عقدة جديدة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;newNode-&gt;data = x; <span class="code-comment">// تعيين القيمة</span><br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// الحالة 1: القائمة فارغة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (head == NULL) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;head = tail = newNode;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newNode-&gt;next = NULL;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// الحالة 2: الإدراج في البداية</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;else if (x &lt; head-&gt;data) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newNode-&gt;next = head;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;head = newNode;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// الحالة 3 و 4: الإدراج في الوسط أو النهاية</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Node *curr = head, *prev = NULL;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// البحث عن مكان الإدراج</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (curr != NULL && curr-&gt;data &lt; x) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prev = curr;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curr = curr-&gt;next;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// الإدراج</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prev-&gt;next = newNode;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newNode-&gt;next = curr;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// إذا كانت نهاية القائمة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (curr == NULL) tail = newNode;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;length++; <span class="code-comment">// زيادة طول القائمة</span><br>
+                        }
+                    </div>
+                    
+                    <h3><i class="fas fa-sitemap"></i> تمثيل مرئي لعملية الإدراج</h3>
+                    
+                    <div class="visualization">
+                        <div class="list-diagram">
+                            <div class="node">
+                                <div class="data-part">1</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">3</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">4</div>
+                                <div class="pointer-part">NULL</div>
+                            </div>
+                        </div>
+                        
+                        <p>بعد إدراج القيمة 2:</p>
+                        
+                        <div class="list-diagram">
+                            <div class="node">
+                                <div class="data-part">1</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node" style="background: #27ae60;">
+                                <div class="data-part">2</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">3</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">4</div>
+                                <div class="pointer-part">NULL</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- حذف العناصر -->
+                <div class="section" id="deletion">
+                    <h2><i class="fas fa-minus-circle"></i> حذف العناصر من القائمة المترابطة</h2>
+                    
+                    <p>خطوات الحذف:</p>
+                    <ol>
+                        <li>البحث عن العقدة المراد حذفها</li>
+                        <li>تحديث المؤشرات للعقد المحيطة</li>
+                        <3>تحرير الذاكرة الخاصة بالعقدة المحذوفة</li>
+                    </ol>
+                    
+                    <h3><i class="fas fa-code"></i> كود الحذف الكامل</h3>
+                    
+                    <div class="code-block">
+                        void SLinkedList::deleteNode(int x) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (head == NULL) return; <span class="code-comment">// القائمة فارغة</span><br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Node *curr = head, *prev = NULL;<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// الحذف من البداية</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (head-&gt;data == x) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;head = head-&gt;next;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (head == NULL) tail = NULL; <span class="code-comment">// إذا أصبحت فارغة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete curr;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// البحث عن العقدة المراد حذفها</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (curr != NULL && curr-&gt;data != x) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prev = curr;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curr = curr-&gt;next;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (curr != NULL) { <span class="code-comment">// إذا وجدت العقدة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prev-&gt;next = curr-&gt;next; <span class="code-comment">// تجاوز العقدة المحذوفة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (curr == tail) tail = prev; <span class="code-comment">// إذا كانت آخر عقدة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete curr; <span class="code-comment">// تحرير الذاكرة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;length--; <span class="code-comment">// تقليل طول القائمة</span><br>
+                        }
+                    </div>
+                    
+                    <h3><i class="fas fa-sitemap"></i> تمثيل مرئي لعملية الحذف</h3>
+                    
+                    <div class="visualization">
+                        <div class="list-diagram">
+                            <div class="node">
+                                <div class="data-part">1</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node" style="background: #e74c3c;">
+                                <div class="data-part">2</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">3</div>
+                                <div class="pointer-part">NULL</div>
+                            </div>
+                        </div>
+                        
+                        <p>بعد حذف القيمة 2:</p>
+                        
+                        <div class="list-diagram">
+                            <div class="node">
+                                <div class="data-part">1</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">3</div>
+                                <div class="pointer-part">NULL</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- القوائم الدائرية -->
+                <div class="section" id="circular">
+                    <h2><i class="fas fa-redo-alt"></i> القوائم الدائرية (Circular Linked Lists)</h2>
+                    
+                    <p>في القوائم الدائرية، آخر عقدة تشير إلى أول عقدة بدلاً من NULL.</p>
+                    
+                    <div class="visualization">
+                        <div class="list-diagram">
+                            <div class="node">
+                                <div class="data-part">1</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">2</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="data-part">3</div>
+                                <div class="pointer-part">↻</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3><i class="fas fa-plus-circle"></i> الإدراج في القائمة الدائرية</h3>
+                    
+                    <div class="code-block">
+                        void insertFront(Node *newNode) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (tail == NULL) { <span class="code-comment">// القائمة فارغة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newNode-&gt;next = newNode; <span class="code-comment">// تشير إلى نفسها</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tail = newNode;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;else {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newNode-&gt;next = tail-&gt;next; <span class="code-comment">// العقدة الجديدة تشير إلى أول عقدة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tail-&gt;next = newNode; <span class="code-comment">// آخر عقدة تشير إلى الجديدة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        }
+                    </div>
+                </div>
+                
+                <!-- القوائم المضاعفة -->
+                <div class="section" id="doubly">
+                    <h2><i class="fas fa-exchange-alt"></i> القوائم المضاعفة (Doubly Linked Lists)</h2>
+                    
+                    <p>في القوائم المضاعفة، كل عقدة تحتوي على مؤشرين: واحد للعقدة التالية وواحد للعقدة السابقة.</p>
+                    
+                    <div class="visualization">
+                        <div class="list-diagram">
+                            <div class="node">
+                                <div class="pointer-part">←</div>
+                                <div class="data-part">1</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="pointer-part">←</div>
+                                <div class="data-part">2</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                            
+                            <div class="arrow">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            
+                            <div class="node">
+                                <div class="pointer-part">←</div>
+                                <div class="data-part">3</div>
+                                <div class="pointer-part">→</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3><i class="fas fa-code"></i> هيكل العقدة في القوائم المضاعفة</h3>
+                    
+                    <div class="code-block">
+                        struct Node {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;int data; <span class="code-comment">// القيمة المخزنة</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Node* next; <span class="code-comment">// مؤشر للعقدة التالية</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Node* prev; <span class="code-comment">// مؤشر للعقدة السابقة</span><br>
+                        };
+                    </div>
+                </div>
+                
+                <!-- خاتمة -->
+                <div class="section" id="final-comparison">
+                    <h2><i class="fas fa-graduation-cap"></i> الخلاصة والتوصيات</h2>
+                    
+                    <h3><i class="fas fa-check-circle"></i> متى نستخدم القوائم المترابطة؟</h3>
+                    <ul>
+                        <li>عندما يكون حجم البيانات غير معروف مسبقًا</li>
+                        <li>عند الحاجة إلى عمليات إدراج/حذف متكررة وسريعة</li>
+                        <li>عندما لا نحتاج إلى وصول عشوائي للبيانات</li>
+                        <li>عند العمل مع كميات كبيرة من البيانات</li>
+                    </ul>
+                    
+                    <h3><i class="fas fa-times-circle"></i> متى نفضل استخدام المصفوفات؟</h3>
+                    <ul>
+                        <li>عندما يكون حجم البيانات معروفًا وثابتًا</li>
+                        <li>عند الحاجة إلى وصول عشوائي سريع (O(1))</li>
+                        <li>عند العمل مع بيانات حجمها صغير أو متوسط</li>
+                        <li>عندما تكون الذاكرة المتجاورة مطلوبة</li>
+                    </ul>
+                    
+                    <div class="note">
+                        <i class="fas fa-lightbulb"></i> <strong>نصيحة أخيرة:</strong> اختيار بنية البيانات المناسب يعتمد على متطلبات التطبيق ونوع العمليات التي ستتم على البيانات.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>جامعة حمص - كلية الهندسة المعلوماتية | الخوارزميات وبُنى المعطيات 1 | المحاضرة السابعة</p>
+            <p>إعداد: د. ناديا خرسان | جميع الحقوق محفوظة © 2025</p>
+        </div>
+        
+        <div class="back-to-top" id="backToTop">
+            <i class="fas fa-arrow-up"></i>
+        </div>
+    </div>
+
+    <script>
+        // تفاعلية القائمة الجانبية
+        document.querySelectorAll('.sidebar li a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // إزالة النشاط من جميع العناصر
+                document.querySelectorAll('.sidebar li').forEach(i => {
+                    i.classList.remove('active');
+                });
+                
+                // إضافة النشاط للعنصر المحدد
+                this.parentElement.classList.add('active');
+                
+                // التمرير إلى القسم المقابل
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // إضافة تأثيرات للعناصر عند التمرير
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.section');
+            const sidebarLinks = document.querySelectorAll('.sidebar li a');
+            const backToTop = document.getElementById('backToTop');
+            
+            // إظهار/إخفاء زر العودة للأعلى
+            if (window.scrollY > 500) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+            
+            // تحديث القائمة الجانبية حسب القسم الظاهر
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (window.scrollY >= (sectionTop - 150)) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            sidebarLinks.forEach(link => {
+                link.parentElement.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.parentElement.classList.add('active');
+                }
+            });
+        });
+        
+        // العودة للأعلى
+        document.getElementById('backToTop').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // تهيئة العناصر قبل التمرير
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(50px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        });
+        
+        // تشغيل تأثير الظهور الأولي
+        setTimeout(() => {
+            document.querySelectorAll('.section').forEach((section, index) => {
+                setTimeout(() => {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, 200 * index);
+            });
+        }, 500);
+    </script>
+</body>
+</html>
